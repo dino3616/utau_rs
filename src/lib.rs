@@ -88,6 +88,18 @@ impl UtaIO{
     }
 }
 
+impl Default for UtaIO{
+    fn default()->Self{
+        match UtaIO::new(){
+            Ok(ok)=>ok,
+            Err(err)=>{
+                eprint!("Error：{}\n",err);
+                std::process::exit(1);
+            }
+        }
+    }
+}
+
 pub struct UtaData{
     pub section_name: String,
     pub length: u32,
@@ -210,5 +222,11 @@ impl UtaSections{
         buf=format!("{}{}",buf,self.next);
 
         Ok(buf)
+    }
+}
+
+impl Default for UtaSections{
+    fn default()->Self{
+        UtaSections::new()
     }
 }
