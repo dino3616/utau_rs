@@ -167,6 +167,7 @@ impl UtaSections{
                 _=>return Err("不明なエラーが発生しました."),
             }
         };
+        std::io::stdout().write_all(&file_byte).unwrap();
         let (decoded,_,_)=SHIFT_JIS.decode(&file_byte);
         self.file_data=decoded.into_owned();
 
@@ -279,7 +280,7 @@ impl UtaSections{
         let metadata=metadata(&filename).unwrap();
         let mut buffer=vec![0;metadata.len() as usize];
         file.read(&mut buffer).unwrap();
-    
+
         Ok(buffer)
     }
 
