@@ -217,7 +217,7 @@ impl UtaSections{
                 None=>return Err("テンポラリファイルが破損しています."),
             };
             if line.starts_with("Lyric="){
-                one_section.lyric=line["Lyric=".len()..line.len()-1].to_string();
+                one_section.lyric=line["Lyric=".chars().count()..line.chars().count()].to_string();
             }
 
             let line=match lines.next(){
