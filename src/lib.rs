@@ -170,6 +170,8 @@ impl UtaSections{
         let (decoded,_,_)=SHIFT_JIS.decode(&file_byte);
         self.file_data=decoded.into_owned();
 
+        print!("{}",self.file_data);
+
         for section in self.file_data.split("[#"){
             match section{
                 ""=>continue,
