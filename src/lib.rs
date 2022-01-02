@@ -166,7 +166,7 @@ impl UtaSections{
                     self.next=section;
                     continue;
                 }
-                one_section.section_name=line["[#".len()..line.len()-2].to_string();
+                one_section.section_name=line["[#".chars().count()..line.chars().count()-2].to_string();
             }
 
             let line=match lines.next(){
@@ -174,7 +174,7 @@ impl UtaSections{
                 None=>return Err("テンポラリファイルが破損しています."),
             };
             if line.starts_with("Length="){
-                one_section.length=match line["Length=".len()..line.len()-1].parse(){
+                one_section.length=match line["Length=".chars().count()..line.chars().count()-1].parse(){
                     Ok(ok)=>ok,
                     Err(_)=>return Err("テンポラリファイルが破損しています."),
                 };
@@ -185,7 +185,7 @@ impl UtaSections{
                 None=>return Err("テンポラリファイルが破損しています."),
             };
             if line.starts_with("Lyric="){
-                one_section.lyric=line["Lyric=".len()..line.len()-1].to_string();
+                one_section.lyric=line["Lyric=".chars().count()..line.chars().count()-1].to_string();
             }
 
             let line=match lines.next(){
@@ -193,7 +193,7 @@ impl UtaSections{
                 None=>return Err("テンポラリファイルが破損しています."),
             };
             if line.starts_with("NoteNum="){
-                one_section.note_num=match line["NoteNum=".len()..line.len()-1].parse(){
+                one_section.note_num=match line["NoteNum=".chars().count()..line.chars().count()-1].parse(){
                     Ok(ok)=>ok,
                     Err(_)=>return Err("テンポラリファイルが破損しています."),
                 }
@@ -206,7 +206,7 @@ impl UtaSections{
                 };
                 one_section.others=format!("{}{}\n",one_section.others,line);
             }
-            one_section.others=one_section.others[..one_section.others.len()-1].to_string();
+            one_section.others=one_section.others[..one_section.others.chars().count()-1].to_string();
 
             self.sections.push(one_section);
         }
