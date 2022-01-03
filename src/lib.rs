@@ -171,7 +171,6 @@ impl UtaSections{
                     continue;
                 }
                 one_section.section_name=line.chars().enumerate().filter(|&(i,_)|i>="[#".chars().count()&&i<"[#0000".chars().count()).fold("".to_string(),|s,(_,c)|format!("{}{}",s,c));
-                print!("{}\n",one_section.section_name);
             }
 
             let line=match lines.next(){
