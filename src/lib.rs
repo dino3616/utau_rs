@@ -151,7 +151,7 @@
 
 //             let line=match lines.next(){
 //                 Some(some)=>some,
-//                 None=>return Err("テンポラリファイルが破損しています."),
+//                 None=>return Err(format!("テンポラリファイルが破損しています. {}:{}",file!(),line!())),
 //             };
 //             if line.starts_with("[#"){
 //                 if line.contains("SETTING"){
@@ -171,18 +171,18 @@
 
 //             let line=match lines.next(){
 //                 Some(some)=>some,
-//                 None=>return Err("テンポラリファイルが破損しています."),
+//                 None=>return Err(format!("テンポラリファイルが破損しています. {}:{}",file!(),line!())),
 //             };
 //             if line.starts_with("Length="){
 //                 one_section.length=match line["Length=".chars().count()..line.chars().count()-1].parse(){
 //                     Ok(ok)=>ok,
-//                     Err(_)=>return Err("テンポラリファイルが破損しています."),
+//                     Err(_)=>return Err(format!("テンポラリファイルが破損しています. {}:{}",file!(),line!())),
 //                 };
 //             }
 
 //             let line=match lines.next(){
 //                 Some(some)=>some,
-//                 None=>return Err("テンポラリファイルが破損しています."),
+//                 None=>return Err(format!("テンポラリファイルが破損しています. {}:{}",file!(),line!())),
 //             };
 //             if line.starts_with("Lyric="){
 //                 one_section.lyric=line["Lyric=".chars().count()..line.chars().count()-1].to_string();
@@ -190,12 +190,12 @@
 
 //             let line=match lines.next(){
 //                 Some(some)=>some,
-//                 None=>return Err("テンポラリファイルが破損しています."),
+//                 None=>return Err(format!("テンポラリファイルが破損しています. {}:{}",file!(),line!())),
 //             };
 //             if line.starts_with("NoteNum="){
 //                 one_section.note_num=match line["NoteNum=".chars().count()..line.chars().count()-1].parse(){
 //                     Ok(ok)=>ok,
-//                     Err(_)=>return Err("テンポラリファイルが破損しています."),
+//                     Err(_)=>return Err(format!("テンポラリファイルが破損しています. {}:{}",file!(),line!())),
 //                 }
 //             }
 
@@ -377,7 +377,7 @@ impl UtaSections{
         })
     }
 
-    pub fn read(&mut self)->Result<(),&'static str>{
+    pub fn read(&mut self)->Result<(),String>{
         self.uta_io.read()?;
 
         for section in self.uta_io.file_data.split("[#"){
@@ -393,7 +393,7 @@ impl UtaSections{
 
             let line=match lines.next(){
                 Some(some)=>some,
-                None=>return Err("テンポラリファイルが破損しています."),
+                None=>return Err(format!("テンポラリファイルが破損しています. {}:{}",file!(),line!())),
             };
             if line.starts_with("[#"){
                 if line.contains("SETTING"){
@@ -408,37 +408,50 @@ impl UtaSections{
                     self.next=section;
                     continue;
                 }
-                one_section.section_name=line["[#".chars().count()..line.chars().count()-2].to_string();
+                // one_section.section_name=line["[#".chars().count()..line.chars().count()-2].to_string();
+                one_section.section_name=line.chars().enumerate().filter(|&(i,_)|i>="[#".chars().count()&&i<"[#0000".chars().count()).fold("".to_string(),|s,(_,c)|format!("{}{}",s,c));
+                print!("{}\n",one_section.section_name);
             }
 
             let line=match lines.next(){
                 Some(some)=>some,
-                None=>return Err("テンポラリファイルが破損しています."),
+                None=>return Err(format!("テンポラリファイルが破損しています. {}:{}",file!(),line!())),
             };
             if line.starts_with("Length="){
-                one_section.length=match line["Length=".chars().count()..line.chars().count()-1].parse(){
+                // one_section.length=match line["Length=".chars().count()..line.chars().count()].parse(){
+                //     Ok(ok)=>ok,
+                //     Err(_)=>return Err(format!("テンポラリファイルが破損しています. {}:{}",file!(),line!())),
+                // };
+                let (_,line)=line.split_whitespace().next().unwrap().split_at("Length=".chars().count());
+                one_section.length=match line.parse(){
                     Ok(ok)=>ok,
-                    Err(_)=>return Err("テンポラリファイルが破損しています."),
+                    Err(_)=>return Err(format!("テンポラリファイルが破損しています. {}:{}",file!(),line!())),
                 };
             }
 
             let line=match lines.next(){
                 Some(some)=>some,
-                None=>return Err("テンポラリファイルが破損しています."),
+                None=>return Err(format!("テンポラリファイルが破損しています. {}:{}",file!(),line!())),
             };
             if line.starts_with("Lyric="){
-                one_section.lyric=line["Lyric=".chars().count()..line.chars().count()-1].to_string();
+                // one_section.lyric=line["Lyric=".chars().count()..line.chars().count()-1].to_string();
+                one_section.lyric=line.chars().skip("Lyric=".chars().count()).take(line.chars().count()).collect();
             }
 
             let line=match lines.next(){
                 Some(some)=>some,
-                None=>return Err("テンポラリファイルが破損しています."),
+                None=>return Err(format!("テンポラリファイルが破損しています. {}:{}",file!(),line!())),
             };
             if line.starts_with("NoteNum="){
-                one_section.note_num=match line["NoteNum=".chars().count()..line.chars().count()-1].parse(){
+                // one_section.note_num=match line["NoteNum=".chars().count()..line.chars().count()].parse(){
+                //     Ok(ok)=>ok,
+                //     Err(_)=>return Err(format!("テンポラリファイルが破損しています. {}:{}",file!(),line!())),
+                // }
+                let (_,line)=line.split_whitespace().next().unwrap().split_at("NoteNum=".chars().count());
+                one_section.note_num=match line.parse(){
                     Ok(ok)=>ok,
-                    Err(_)=>return Err("テンポラリファイルが破損しています."),
-                }
+                    Err(_)=>return Err(format!("テンポラリファイルが破損しています. {}:{}",file!(),line!())),
+                };
             }
 
             loop{
@@ -448,7 +461,7 @@ impl UtaSections{
                 };
                 one_section.others=format!("{}{}\n",one_section.others,line);
             }
-            one_section.others=one_section.others[..one_section.others.chars().count()-1].to_string();
+            // one_section.others=one_section.others;
 
             self.sections.push(one_section);
         }
