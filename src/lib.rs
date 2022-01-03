@@ -1,13 +1,13 @@
 use std::{io::{Read,Write,BufWriter},env,fs::*};
 use encoding_rs::SHIFT_JIS;
 
-pub struct UtaIO{
-    pub tmpfile: String,
-    pub file_data: String,
+struct UtaIO{
+    tmpfile: String,
+    file_data: String,
 }
 
 impl UtaIO{
-    pub fn new()->Result<UtaIO,&'static str>{
+    fn new()->Result<UtaIO,&'static str>{
         let args: Vec<String>=env::args().collect();
         let tmpfile;
         if let Some(some)=args.get(1){
@@ -26,7 +26,7 @@ impl UtaIO{
         })
     }
 
-    pub fn read(&mut self)->Result<(),&'static str>{
+    fn read(&mut self)->Result<(),&'static str>{
         let file_byte=match UtaIO::read_file_as_byte(&self.tmpfile){
             Ok(ok)=>ok,
             Err(err)=>match err{
@@ -40,7 +40,7 @@ impl UtaIO{
         Ok(())
     }
 
-    pub fn write(&self)->Result<(),&'static str>{
+    fn write(&self)->Result<(),&'static str>{
         let mut buf=Vec::new();
         for line in self.file_data.split("\n"){
             let line=&format!("{}\n",line)[..];
@@ -226,7 +226,7 @@ impl UtaSections{
         Ok(())
     }
 
-    pub fn apply(&self)->Result<String,&'static str>{
+    fn apply(&self)->Result<String,&'static str>{
         let mut buf=format!("{}{}",self.setting,self.prev);
         for uta_data in &self.sections{
             buf=format!("{}[#{}]\nLength={}\nLyric={}\nNoteNum={}\n{}",buf,uta_data.section_name,uta_data.length,uta_data.lyric,uta_data.note_num,uta_data.others);
