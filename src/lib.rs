@@ -121,7 +121,7 @@ impl UtaData{
 }
 
 pub struct UtaSections{
-    uta_io: UtaIO,
+    pub uta_io: UtaIO,
     pub setting: String,
     pub prev: String,
     pub sections: Vec<UtaData>,
