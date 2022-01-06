@@ -1,8 +1,8 @@
 use std::{io::{Read,Write,BufWriter},env,fs::*};
 use encoding_rs::SHIFT_JIS;
 
-struct UtaIO{
-    tmpfile: String,
+pub struct UtaIO{
+    pub tmpfile: String,
     file_data: String,
 }
 
